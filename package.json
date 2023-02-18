@@ -6,17 +6,20 @@
   "scripts": {
     "deploy-commands": "ts-node src/scripts/deploy-commands.ts",
     "dev": "ts-node-dev --files src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
-    "booru": "^2.4.2",
+    "booru": "^2.5.2",
     "discord-api-types": "^0.22.0",
     "discord.js": "^13.1.0",
-    "prettier": "^2.3.2"
+    "dotenv": "^16.0.3",
+    "openai": "^3.1.0",
+    "prettier": "^2.8.3"
   },
   "devDependencies": {
     "@types/node": "^16.7.10",

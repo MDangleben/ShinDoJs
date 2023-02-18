@@ -14,8 +14,9 @@ const commands: any[] = [];
 const commandFiles = fs.readdirSync(COMMANDS_PATH);
 
 (async () => {
-  // Pull command data from commnd files in commands folder
+  // Pull command data from command files in commands folder
   for (const file of commandFiles) {
+    console.log(`${COMMANDS_PATH}/${file}`)
     const pkg = await import(`${COMMANDS_PATH}/${file}`);
     if (pkg.command) {
       console.log(`Found command: ${pkg.command.data.name}`);

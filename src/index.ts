@@ -1,14 +1,14 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { Client, Collection, Intents } from "discord.js";
+import { Client, Collection, Intents } from 'discord.js';
 
-import { token } from "../config.json";
+import { token } from '../config.json';
 
-const COMMANDS_PATH = path.resolve(__dirname, "./commands");
-const EVENTS_PATH = path.resolve(__dirname, "./events");
+const COMMANDS_PATH = path.resolve(__dirname, './commands');
+const EVENTS_PATH = path.resolve(__dirname, './events');
 
-console.log("Initializing...");
+console.log('Initializing...');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -29,7 +29,7 @@ const commandFiles = fs.readdirSync(COMMANDS_PATH);
 // Initialize events
 const eventFiles = fs
   .readdirSync(EVENTS_PATH)
-  .filter((file) => file.endsWith(".ts"));
+  .filter((file) => file.endsWith('.ts'));
 
 (async () => {
   for (const file of eventFiles) {
