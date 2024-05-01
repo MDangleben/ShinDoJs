@@ -1,28 +1,25 @@
-import { ButtonInteraction, CommandInteraction } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { ButtonInteraction, ButtonStyle, CommandInteraction } from 'discord.js';
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageActionRow, MessageButton } = require('discord.js');
 
-const PING_BUTTON_ID = "PING_BUTTON_ID";
+const PING_BUTTON_ID = 'PING_BUTTON_ID';
 let timesButtonClicked = 0;
 
-/**
- * Comments here are for clarity in example file
- */
-
 // Create action row and populate it with button component
-const row = new MessageActionRow().addComponents(
-  new MessageButton()
+const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  new ButtonBuilder()
     .setCustomId(PING_BUTTON_ID)
-    .setLabel("Test Button")
-    .setStyle("PRIMARY")
+    .setLabel('Test Button')
+    .setStyle(ButtonStyle.Primary),
 );
 
 export const command = {
   // Slash command information
   data: new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("Sample command"),
+    .setName('ping')
+    .setDescription('Sample command'),
 
   // Code that runs on slash command trigger
   execute: async (interaction: CommandInteraction) => {

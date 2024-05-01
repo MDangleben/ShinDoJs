@@ -1,36 +1,61 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v9";
+import {
+  REST,
+  RESTPostAPIApplicationCommandsJSONBody,
+  Routes,
+} from 'discord.js';
 
-import { clientId, guildId, token } from "../../config.json";
+import { token, clientId, guildId } from '../../config.json';
 
-const rest = new REST({ version: "9" }).setToken(token);
+const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
-const COMMANDS_PATH = path.resolve("src/commands");
+const commandFoldersPath = path.join(__dirname, '../commands');
+const commandFolders = fs.readdirSync(commandFoldersPath);
 
-const commands: any[] = [];
-const commandFiles = fs.readdirSync(COMMANDS_PATH);
+const rest = new REST().setToken(token);
 
 (async () => {
-  // Pull command data from command files in commands folder
-  for (const file of commandFiles) {
-    console.log(`${COMMANDS_PATH}/${file}`)
-    const pkg = await import(`${COMMANDS_PATH}/${file}`);
-    if (pkg.command) {
-      console.log(`Found command: ${pkg.command.data.name}`);
-      commands.push(pkg.command.data.toJSON());
+  // Iterate over files in command folders and build commands from applicable files
+  for (const folder of commandFolders) {
+    const commandsPath = path.join(commandFoldersPath, folder);
+    const commandFiles = fs
+      .readdirSync(commandsPath)
+      .filter((file) => file.endsWith('.ts'));
+
+    console.log(commandFiles);
+
+    // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+    for (const file of commandFiles) {
+      const filePath = path.join(commandsPath, file);
+      const { command } = await import(filePath);
+
+      if (command) {
+        if ('data' in command && 'execute' in command) {
+          commands.push(command.data.toJSON());
+        } else {
+          console.log(
+            `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`,
+          );
+        }
+      }
     }
   }
 
+  // Deploy commands
   try {
-    // Register commands
-    await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-      body: commands,
-    });
+    console.log(
+      `Started refreshing ${commands.length} application (/) commands.`,
+    );
 
-    console.log("Successfully registered application commands.");
+    // Refresh all commands in target guild with loaded commands
+    const data = await rest.put(
+      Routes.applicationGuildCommands(clientId, guildId),
+      { body: commands },
+    );
+
+    console.log(`Successfully reloaded application (/) commands.`);
   } catch (error) {
     console.error(error);
   }

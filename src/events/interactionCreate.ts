@@ -1,5 +1,5 @@
-import { Interaction } from "discord.js";
-import { PingCommand, BooruCommand } from "../commands";
+import { Interaction } from 'discord.js';
+import { PingCommand, BooruCommand } from '../commands/main';
 
 /**
  * Handles interactions for all commands
@@ -14,7 +14,7 @@ const commandInteractionHandler = async (interaction: Interaction) => {
       } catch (error) {
         console.error(error);
         await interaction.reply({
-          content: "There was an error while executing this command!",
+          content: 'There was an error while executing this command!',
           ephemeral: true,
         });
       }
@@ -33,7 +33,7 @@ const buttonInteractionHandler = async (interaction: Interaction) => {
 };
 
 export const event = {
-  name: "interactionCreate",
+  name: 'interactionCreate',
   execute(interaction: Interaction) {
     commandInteractionHandler(interaction);
     buttonInteractionHandler(interaction);

@@ -1,43 +1,43 @@
+import { ButtonInteraction, ButtonStyle, CommandInteraction } from 'discord.js';
+import { getBooruImages } from '../../utils/booru';
 import {
-  ButtonInteraction,
-  CommandInteraction,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
-} from "discord.js";
-import { getBooruImages } from "../utils/booru";
+  ActionRowBuilder,
+  ButtonBuilder,
+  EmbedBuilder,
+} from '@discordjs/builders';
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const formatImageEmbed = (url: string) =>
-  new MessageEmbed().setColor("#ffd1dc").setImage(url);
+  new EmbedBuilder().setColor([100, 82, 86]).setImage(url);
 
 enum Button {
-  DELETE = "booru_DELETE",
+  DELETE = 'booru_DELETE',
 }
 
-const row = new MessageActionRow().addComponents(
-  new MessageButton()
+const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  new ButtonBuilder()
     .setCustomId(Button.DELETE)
-    .setLabel("Delete")
-    .setStyle("DANGER")
+    .setLabel('Delete')
+    .setStyle(ButtonStyle.Danger),
 );
 
 export const command = {
   data: new SlashCommandBuilder()
-    .setName("booru")
-    .setDescription("Posts random images from gelbooru")
+    .setName('booru')
+    .setDescription('Posts random images from gelbooru')
     .addStringOption((option) =>
-      option.setName("tags").setDescription("Tags used to search images")
+      option.setName('tags').setDescription('Tags used to search images'),
     ),
 
   execute: async (interaction: CommandInteraction) => {
-    const tags = interaction.options.getString("tags")?.split(" ");
+    // @ts-ignore
+    const tags = interaction.options.getString('tags')?.split(' ');
 
     await interaction.deferReply();
 
     const imageUrls = await getBooruImages({ tags, limit: 3 });
-    
+
     if (!imageUrls.length) {
     }
 
